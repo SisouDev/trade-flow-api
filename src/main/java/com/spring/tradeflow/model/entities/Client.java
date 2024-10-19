@@ -15,26 +15,11 @@ import java.util.Objects;
 @Entity
 @Table
 @Getter
-public class Client {
+public class Client extends User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Setter
-    @Column(nullable = false)
-    private String firstName;
-
-    @Setter
-    @Column(nullable = false)
-    private String lastName;
-
-    @Setter
-    @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
 
     @Setter
     @Column(nullable = false)
@@ -55,22 +40,14 @@ public class Client {
     private Address address;
 
     public Client() {
+        super();
     }
 
-    public void setPassword(String password) {
-        this.password = HashPassword.hashPassword(password);
-    }
-
-    public Client(String firstName, String lastName, LocalDate birthday, String email, String password,
-                  Gender gender, Address address, List<Telephone> telephones
-    ) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthday = birthday;
-        this.email = email;
-        setPassword(password);
-        this.gender = gender;
+    public Client(String email, String firstName, String lastName, String password, Address address, LocalDate birthday, Gender gender, List<Telephone> telephones) {
+        super(email, firstName, lastName, password);
         this.address = address;
+        this.birthday = birthday;
+        this.gender = gender;
         this.telephones = telephones;
     }
 
@@ -96,17 +73,4 @@ public class Client {
         return Objects.hashCode(getId());
     }
 
-    @Override
-    public String toString() {
-        return "Client{" +
-                "address=" + address +
-                ", id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", birthday=" + birthday +
-                ", gender=" + gender +
-                ", telephones=" + telephones +
-                '}';
-    }
 }
