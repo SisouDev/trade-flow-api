@@ -46,6 +46,9 @@ public class Order {
     @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate orderDate;
 
+    @Setter
+    private Double discountedPrice;
+
     public Order() {
     }
 

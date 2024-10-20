@@ -22,6 +22,26 @@ public class ProductController {
         return productService.createProduct(product);
     }
 
+    @PutMapping(path = "/{id}/stock")
+    public void updateStock(@PathVariable Long id, @RequestBody Integer stock) {
+       productService.updateStock(id, stock);
+    }
+
+    @GetMapping(path = "/low-stock")
+    public List<Product> findLowStockProducts() {
+        return productService.findLowStockProducts();
+    }
+
+    @GetMapping(path = "/price-range")
+    public List<Product> findPriceRangeProducts(@RequestParam Double minPrice, @RequestParam Double maxPrice) {
+        return productService.findProductsByPriceRange(minPrice, maxPrice);
+    }
+
+    @GetMapping(path = "/search")
+    public List<Product> searchProductsByKeyword(@RequestParam String search) {
+        return productService.searchProductsByKeyword(search);
+    }
+
     @GetMapping("/{id}")
     public Product getProduct(@PathVariable Long id){
         return productService.getProduct(id);

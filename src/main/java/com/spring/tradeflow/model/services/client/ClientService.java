@@ -8,6 +8,7 @@ import com.spring.tradeflow.model.entities.client.Telephone;
 import com.spring.tradeflow.model.repositories.client.AddressRepository;
 import com.spring.tradeflow.model.repositories.client.ClientRepository;
 import com.spring.tradeflow.model.repositories.client.TelephoneRepository;
+import com.spring.tradeflow.utils.enums.client.States;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,14 +74,14 @@ public class ClientService {
     }
 
     @Transactional
-    public Client removeTelephone(Long clientId, Long telephoneId) {
+    public void removeTelephone(Long clientId, Long telephoneId) {
         Client client = getClientById(clientId);
         Telephone telephone = client.getTelephones().stream()
                 .filter(t -> t.getTelephoneId().equals(telephoneId))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Telephone not found"));
         client.removeTelephone(telephone);
-        return clientRepository.save(client);
+        clientRepository.removeTelephone(clientId, telephoneId);
     }
 
     @Transactional
@@ -90,4 +91,25 @@ public class ClientService {
         addressRepository.save(address);
         return clientRepository.save(client);
     }
+
+    @Transactional
+    public int updateAddressCity(Long clientId, String city) {
+        return clientRepository.updateAddressCity(clientId, city);
+    }
+
+
+    @Transactional
+    public int updateClientFirstName(Long clientId, String firstName) {
+        return clientRepository.updateFirstName(clientId, firstName);
+    }
+
+    @Transactional
+    public int updateClientLastName(Long clientId, String lastName) {
+        return clientRepository.updateLastName(clientId, lastName);
+    }
+
+    public List<Client> findClientsByCity(String city) {
+        return clientRepository.findByAddress_City(city);
+    }
+
 }
