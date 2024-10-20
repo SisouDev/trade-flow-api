@@ -1,4 +1,4 @@
-package com.spring.tradeflow.model.entities;
+package com.spring.tradeflow.model.entities.client;
 
 import jakarta.persistence.*;
 import lombok.Getter;

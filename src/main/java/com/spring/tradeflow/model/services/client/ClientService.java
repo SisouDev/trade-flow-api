@@ -1,13 +1,13 @@
-package com.spring.tradeflow.model.services;
+package com.spring.tradeflow.model.services.client;
 
 import com.spring.tradeflow.exceptions.InvalidDataException;
 import com.spring.tradeflow.exceptions.ResourceNotFoundException;
-import com.spring.tradeflow.model.entities.Address;
-import com.spring.tradeflow.model.entities.Client;
-import com.spring.tradeflow.model.entities.Telephone;
-import com.spring.tradeflow.model.repositories.AddressRepository;
-import com.spring.tradeflow.model.repositories.ClientRepository;
-import com.spring.tradeflow.model.repositories.TelephoneRepository;
+import com.spring.tradeflow.model.entities.client.Address;
+import com.spring.tradeflow.model.entities.client.Client;
+import com.spring.tradeflow.model.entities.client.Telephone;
+import com.spring.tradeflow.model.repositories.client.AddressRepository;
+import com.spring.tradeflow.model.repositories.client.ClientRepository;
+import com.spring.tradeflow.model.repositories.client.TelephoneRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

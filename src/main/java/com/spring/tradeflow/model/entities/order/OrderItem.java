@@ -1,5 +1,7 @@
-package com.spring.tradeflow.model.entities;
+package com.spring.tradeflow.model.entities.order;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.spring.tradeflow.model.entities.product.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +26,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference
     private Order order;
 
     public OrderItem() {

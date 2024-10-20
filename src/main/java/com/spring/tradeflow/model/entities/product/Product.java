@@ -1,16 +1,19 @@
-package com.spring.tradeflow.model.entities;
+package com.spring.tradeflow.model.entities.product;
 
 import com.spring.tradeflow.exceptions.InvalidDataException;
-import com.spring.tradeflow.utils.enums.ProductType;
+import com.spring.tradeflow.utils.enums.product.ProductType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 import java.util.Objects;
 
 @Entity
 @Table
 @Getter
+@ToString
+@NoArgsConstructor
 public class Product {
 
     @Id
@@ -19,10 +22,12 @@ public class Product {
 
     @Column(nullable = false)
     @Setter
+    @NotBlank(message = "Name cannot be empty")
     private String name;
 
     @Column(nullable = false)
     @Setter
+    @NotBlank(message = "Description cannot be empty")
     private String description;
 
     @Column(nullable = false)
@@ -31,20 +36,25 @@ public class Product {
     private ProductType type;
 
     @Column(nullable = false)
+    @Min(value = 0, message = "Price must be greater than zero")
     private Double price;
 
     @Column(nullable = false)
+    @Min(value = 0, message = "Stock cannot be negative")
     private Integer stock;
 
-    public Product() {
-    }
+    @Column(nullable = false)
+    @Setter
+    private String imageUrl;
 
-    public Product(String name, String description,  Double price, Integer stock, ProductType type) {
+
+    public Product(String name, String description,  Double price, Integer stock, ProductType type, String imageUrl) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.type = type;
+        this.imageUrl = imageUrl;
     }
 
     public void setStock(Integer stock) {
@@ -73,15 +83,4 @@ public class Product {
         return Objects.hashCode(getId());
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "description='" + description + '\'' +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", type=" + type +
-                ", price=" + price +
-                ", stock=" + stock +
-                '}';
-    }
 }

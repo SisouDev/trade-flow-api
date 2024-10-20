@@ -1,6 +1,6 @@
-package com.spring.tradeflow.model.entities;
+package com.spring.tradeflow.model.entities.client;
 
-import com.spring.tradeflow.utils.HashPassword;
+import com.spring.tradeflow.utils.common.HashPassword;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;

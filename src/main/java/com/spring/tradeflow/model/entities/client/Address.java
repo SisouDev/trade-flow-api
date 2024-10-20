@@ -1,15 +1,20 @@
-package com.spring.tradeflow.model.entities;
+package com.spring.tradeflow.model.entities.client;
 
-import com.spring.tradeflow.utils.enums.States;
+import com.spring.tradeflow.utils.enums.client.States;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Objects;
 
 @Entity
 @Table
 @Getter
+@NoArgsConstructor
+@ToString
 public class Address {
 
     @Id
@@ -18,10 +23,12 @@ public class Address {
 
     @Setter
     @Column(nullable = false)
+    @NotBlank(message = "Street cannot be blank.")
     private String street;
 
     @Setter
     @Column(nullable = false)
+    @NotBlank(message = "City cannot be blank.")
     private String city;
 
     @Setter
@@ -29,8 +36,6 @@ public class Address {
     @Enumerated(EnumType.STRING)
     private States state;
 
-    public Address(){
-    }
 
     public Address(String city, States state, String street) {
         this.city = city;
@@ -50,13 +55,4 @@ public class Address {
         return Objects.hashCode(getAddressId());
     }
 
-    @Override
-    public String toString() {
-        return "Address{" +
-                "addressId=" + addressId +
-                ", street='" + street + '\'' +
-                ", city='" + city + '\'' +
-                ", state=" + state +
-                '}';
-    }
 }

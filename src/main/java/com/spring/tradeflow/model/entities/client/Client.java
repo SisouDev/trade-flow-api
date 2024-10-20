@@ -1,11 +1,12 @@
-package com.spring.tradeflow.model.entities;
+package com.spring.tradeflow.model.entities.client;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.spring.tradeflow.utils.HashPassword;
-import com.spring.tradeflow.utils.enums.Gender;
+import com.spring.tradeflow.utils.enums.client.Gender;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.Objects;
 @Entity
 @Table
 @Getter
-public class Client extends User{
+public class Client extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +24,7 @@ public class Client extends User{
 
     @Setter
     @Column(nullable = false)
+    @NotBlank(message = "Date of birth cannot be blank.")
     private LocalDate birthday;
 
     @Setter

@@ -1,4 +1,4 @@
-package com.spring.tradeflow.utils;
+package com.spring.tradeflow.utils.common;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

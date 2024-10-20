@@ -1,7 +1,7 @@
-package com.spring.tradeflow.controller;
+package com.spring.tradeflow.controller.client;
 
-import com.spring.tradeflow.model.entities.Client;
-import com.spring.tradeflow.model.services.ClientService;
+import com.spring.tradeflow.model.entities.client.Client;
+import com.spring.tradeflow.model.services.client.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

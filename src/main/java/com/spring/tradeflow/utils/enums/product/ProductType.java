@@ -1,4 +1,4 @@
-package com.spring.tradeflow.utils.enums;
+package com.spring.tradeflow.utils.enums.product;
 
 import lombok.Getter;
 
