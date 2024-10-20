@@ -9,6 +9,7 @@ import com.spring.tradeflow.model.entities.product.Product;
 import com.spring.tradeflow.model.repositories.client.ClientRepository;
 import com.spring.tradeflow.model.repositories.order.OrderRepository;
 import com.spring.tradeflow.model.repositories.product.ProductRepository;
+import com.spring.tradeflow.utils.enums.order.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,5 +71,23 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    public Order updateOrderStatus(Long orderId, OrderStatus status) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        order.setStatus(status);
+        return orderRepository.save(order);
+    }
 
+    public List<Order> getOrders(Long clientId) {
+        List<Order> clientOrders = new ArrayList<>();
+        List<Order> orders = (List<Order>) orderRepository.findAll();
+        for (Order order : orders) {
+            if (order.getClient().getId().equals(clientId)) {
+                clientOrders.add(order);
+                return orders;
+            }else {
+                throw new ResourceNotFoundException("Client dont found or dont have orders.");
+            }
+        }
+        return clientOrders;
+    }
 }
