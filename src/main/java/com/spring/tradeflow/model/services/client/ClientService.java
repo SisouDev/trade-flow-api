@@ -8,7 +8,6 @@ import com.spring.tradeflow.model.entities.client.Telephone;
 import com.spring.tradeflow.model.repositories.client.AddressRepository;
 import com.spring.tradeflow.model.repositories.client.ClientRepository;
 import com.spring.tradeflow.model.repositories.client.TelephoneRepository;
-import com.spring.tradeflow.utils.enums.client.States;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,18 +29,11 @@ public class ClientService {
 
     @Transactional
     public Client createClient(Client client) {
-        if (client == null || client.getAddress() == null || client.getPassword() == null) {
-            throw new InvalidDataException("Client cannot be null");
+        if (client == null || client.getAddress() == null) {
+            throw new InvalidDataException("Client or Address cannot be null.");
         }
-        Address address = client.getAddress();
-        addressRepository.save(address);
-        client.setAddress(address);
-
-        if (client.getTelephones() != null) {
-            for (Telephone telephone : client.getTelephones()) {
-                telephone.setClient(client);
-            }
-        }
+        addressRepository.save(client.getAddress());
+        client.getTelephones().forEach(t -> t.setClient(client));
         return clientRepository.save(client);
     }
 
@@ -55,18 +47,6 @@ public class ClientService {
 
     @Transactional
     public Client addTelephone(Long clientId, Telephone telephone) {
-        if (telephone == null || telephone.getAreaCode() == null || telephone.getType() == null || telephone.getNumber() == null) {
-            throw new InvalidDataException("Telephone fields cannot be null");
-        }
-        if (telephone.getAreaCode().isEmpty() || telephone.getNumber().isEmpty()) {
-            throw new InvalidDataException("Area code or number cannot be empty");
-        }
-        if (telephone.getAreaCode().length() != 2) {
-            throw new InvalidDataException("Area code length must be 2.");
-        }
-        if (telephone.getNumber().length() != 9){
-            throw new InvalidDataException("Number length must be 9.");
-        }
         Client client = getClientById(clientId);
         telephone.setClient(client);
         client.addTelephone(telephone);
@@ -81,14 +61,12 @@ public class ClientService {
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Telephone not found"));
         client.removeTelephone(telephone);
-        clientRepository.removeTelephone(clientId, telephoneId);
     }
 
     @Transactional
     public Client updateAddress(Long clientId, Address address) {
         Client client = getClientById(clientId);
         client.setAddress(address);
-        addressRepository.save(address);
         return clientRepository.save(client);
     }
 
@@ -97,15 +75,14 @@ public class ClientService {
         return clientRepository.updateAddressCity(clientId, city);
     }
 
-
     @Transactional
-    public int updateClientFirstName(Long clientId, String firstName) {
-        return clientRepository.updateFirstName(clientId, firstName);
+    public void updateClientFirstName(Long clientId, String firstName) {
+        clientRepository.updateFirstName(clientId, firstName);
     }
 
     @Transactional
-    public int updateClientLastName(Long clientId, String lastName) {
-        return clientRepository.updateLastName(clientId, lastName);
+    public void updateClientLastName(Long clientId, String lastName) {
+        clientRepository.updateLastName(clientId, lastName);
     }
 
     public List<Client> findClientsByCity(String city) {

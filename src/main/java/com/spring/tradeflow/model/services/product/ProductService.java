@@ -61,10 +61,10 @@ public class ProductService {
         return productRepository.updateProductPrice(id, price);
     }
 
-    public int updateStock(Long id, Integer stock) {
+    public void updateStockById(Long id, Integer stock) {
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
         product.setStock(stock);
-        return productRepository.updateStockById(id, stock);
+        productRepository.updateStockById(id, stock);
     }
 
     public int updateImageUrl(Long id, String imageUrl) {

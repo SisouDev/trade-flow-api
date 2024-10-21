@@ -40,20 +40,17 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(Order order) {
-        Client orderClient = clientRepository.findById(order.getClient().getId()).orElseThrow(
-                () -> new ResourceNotFoundException("Client not found")
-        );
-        order.setClient(orderClient);
+        Client client = clientRepository.findById(order.getClient().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
+        order.setClient(client);
 
-        for (OrderItem item : order.getOrderItems()) {
+        order.getOrderItems().forEach(item -> {
             Product product = productRepository.findById(item.getProduct().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-            if (product.getPrice() == null || product.getPrice() <= 0) {
-                throw new InvalidDataException("Product price is invalid for product ID: " + product.getId());
-            }
-            item.setOrder(order);
             item.setProduct(product);
-        }
+            item.setOrder(order);
+        });
+
         return orderRepository.save(order);
     }
 
@@ -132,14 +129,13 @@ public class OrderService {
     }
 
     @Transactional
-    public int cancelOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
-        if (order.getStatus() != OrderStatus.CANCELLED && order.getStatus() != OrderStatus.COMPLETED) {
-            order.setStatus(OrderStatus.CANCELLED);
-        } else {
+    public void cancelOrder(Long orderId) {
+        Order order = getOrderById(orderId);
+        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.COMPLETED) {
             throw new InvalidDataException("Order is already completed or cancelled.");
         }
-        return orderRepository.cancelOrder(orderId);
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
     }
 
     public Order applyDiscountWithCoupon(Long orderId, String couponCode) {
@@ -181,6 +177,15 @@ public class OrderService {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         order.setShippingPrice(shippingPrice);
         return orderRepository.save(order);
+    }
+
+    @Transactional
+    public Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+    }
+
+    public List<Order> getAllOrders(){
+        return orderRepository.findAll();
     }
 
 }
