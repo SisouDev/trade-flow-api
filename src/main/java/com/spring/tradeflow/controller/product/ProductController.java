@@ -3,6 +3,7 @@ package com.spring.tradeflow.controller.product;
 import com.spring.tradeflow.model.entities.product.Product;
 import com.spring.tradeflow.model.services.product.ProductService;
 import com.spring.tradeflow.utils.enums.product.ProductType;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("api/product")
 public class ProductController {
@@ -20,27 +22,35 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        log.info("Creating product {}", product);
         Product createdProduct = productService.createProduct(product);
+        log.info("Product created {}", createdProduct);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        log.info("Getting product {}", id);
         Product product = productService.getProduct(id);
+        log.info("Product returned {}", product);
         return ResponseEntity.ok(product);
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<Product>> getAllProducts() {
+        log.info("Getting all products");
         List<Product> products = productService.getAllProducts();
+        log.info("All Products returned {}", products);
         return ResponseEntity.ok(products);
     }
 
     @PutMapping("/{id}/stock")
     public ResponseEntity<Void> updateStock(@PathVariable Long id, @RequestBody Integer stock) {
+        log.info("Updating stock {}", stock);
         productService.updateStockById(id, stock);
+        log.info("Stock updated {}", stock);
         return ResponseEntity.noContent().build();
     }
 
