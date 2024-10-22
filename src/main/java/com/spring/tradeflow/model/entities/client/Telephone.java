@@ -15,7 +15,6 @@ import java.util.Objects;
 @Table
 @Getter
 @NoArgsConstructor
-@ToString
 public class Telephone {
 
     @Id
