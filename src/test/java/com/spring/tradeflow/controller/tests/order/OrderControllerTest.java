@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -152,13 +153,18 @@ public class OrderControllerTest {
                 .andExpect(status().isOk());
     }
 
-//    @Test
-//    public void testGetOrdersByDateRange() throws Exception {
-//        mockMvc.perform(get(baseUrl + "/date-range")
-//                .param("startDate", LocalDate.now(), "endDate", LocalDate.now())
-//                .contentType(MediaType.APPLICATION_JSON)
-//                ).andExpect(status().isOk());
-//    }
+    @Test
+    public void testGetOrdersByDateRange() throws Exception {
+        String startDate = LocalDate.of(2024, 10, 19).toString();
+        String endDate = LocalDate.now().toString();
+        mockMvc.perform(get(baseUrl + "/date-range")
+                        .param("startDate", startDate)
+                        .param("endDate", endDate)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(greaterThan(0)));
+    }
 
     @Test
     public void testUpdateOrderItemQuantity() throws Exception {
