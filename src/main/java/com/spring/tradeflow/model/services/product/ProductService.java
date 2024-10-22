@@ -78,11 +78,14 @@ public class ProductService {
     }
 
     public Product applyDiscount(Long productId, Double discountPercentage) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
         double originalPrice = product.getPrice();
-        double discountAmount = originalPrice * (discountPercentage / 100);
+        double discountAmount = originalPrice * (discountPercentage / 100.0);
         double newPrice = originalPrice - discountAmount;
+
         product.setPrice(newPrice);
+
         return productRepository.save(product);
     }
 

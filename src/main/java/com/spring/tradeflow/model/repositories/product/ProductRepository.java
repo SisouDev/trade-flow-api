@@ -47,6 +47,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
     @Transactional
+    @Query("UPDATE Product p SET p.price = :newPrice WHERE p.id = :productId")
+    int updatePrice(Long productId, Double newPrice);
+
+    @Modifying
+    @Transactional
     @Query("UPDATE Product p SET p.imageUrl = :imageUrl WHERE p.id = :productId")
     int updateImageUrl(Long productId, String imageUrl);
 }

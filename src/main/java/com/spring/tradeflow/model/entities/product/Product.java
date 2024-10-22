@@ -12,11 +12,11 @@ import java.util.Objects;
 @Entity
 @Table
 @Getter
-@ToString
 @NoArgsConstructor
 public class Product {
 
     @Id
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -69,6 +69,22 @@ public class Product {
             throw new InvalidDataException("Price cannot be negative");
         }
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Product {\n" +
+                        "  Product Description: '%s',\n" +
+                        "  Product Id: %d,\n" +
+                        "  Product Name: '%s',\n" +
+                        "  Product Type: %s,\n" +
+                        "  Product Price: %.2f,\n" +
+                        "  Product Stock: %d,\n" +
+                        "  Product Image Url: '%s'\n" +
+                        "}",
+                description, id, name, type.getDescription(), price, stock, imageUrl
+        );
     }
 
     @Override

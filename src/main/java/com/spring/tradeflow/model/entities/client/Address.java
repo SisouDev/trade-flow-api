@@ -55,4 +55,16 @@ public class Address {
         return Objects.hashCode(getAddressId());
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "Address {\n" +
+                        "  addressId: %d,\n" +
+                        "  street: '%s',\n" +
+                        "  city: '%s',\n" +
+                        "  state: %s\n" +
+                        "}",
+                addressId, street, city, state.getName()
+        );
+    }
 }

@@ -39,4 +39,18 @@ public class Coupon {
         return !isUsed && expirationDate.isAfter(LocalDate.now());
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "Coupon {\n" +
+                        "  code: '%s',\n" +
+                        "  couponId: %d,\n" +
+                        "  discountType: %s,\n" +
+                        "  discountValue: %.2f,\n" +
+                        "  expirationDate: %s,\n" +
+                        "  isUsed: %b\n" +
+                        "}",
+                code, couponId, discountType, discountValue, expirationDate, isUsed
+        );
+    }
 }

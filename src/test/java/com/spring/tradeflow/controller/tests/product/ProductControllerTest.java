@@ -64,14 +64,14 @@ public class ProductControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-//    @Test
-//    public void testApplyDiscount() throws Exception {
-//        Double discountPercentage = 0.5;
-//        mockMvc.perform(put("/api/product/{id}/discount", 71, discountPercentage)
-//                .contentType("application/json")
-//                        .content(discountPercentage.toString()))
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    public void testApplyDiscount() throws Exception {
+        double discountPercentage = 50.0;
+        mockMvc.perform(put("/api/product/{id}/discount", 71)
+                        .param("discountPercentage", Double.toString(discountPercentage))
+                        .contentType("application/json"))
+                .andExpect(status().isOk());
+    }
 
     @Test
     public void testFindLowStockProducts() throws Exception {
@@ -89,5 +89,25 @@ public class ProductControllerTest {
                         .param("maxPrice", Double.toString(maxPrice))
                         .contentType("application/json"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testSearchProducts() throws Exception {
+        mockMvc.perform(get("/api/product/search")
+                .param("keyword","Red").contentType("application/json"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void findByType() throws Exception {
+        mockMvc.perform(get("/api/product/type/{type}", ProductType.SERIES.name())
+                        .contentType("application/json"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testDeleteProduct() throws Exception {
+        mockMvc.perform(delete("/api/product/{id}", 71)
+        .contentType("application/json")).andExpect(status().isNoContent());
     }
 }

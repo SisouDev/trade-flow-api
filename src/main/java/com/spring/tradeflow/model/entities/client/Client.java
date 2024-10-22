@@ -1,5 +1,6 @@
 package com.spring.tradeflow.model.entities.client;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.tradeflow.utils.enums.client.Gender;
 import jakarta.persistence.*;
@@ -34,6 +35,7 @@ public class Client extends User {
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @JsonIgnore
     List<Telephone> telephones = new ArrayList<>();
 
     @Setter
@@ -75,4 +77,18 @@ public class Client extends User {
         return Objects.hashCode(getId());
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "Client {\n" +
+                        "  Client Address City: %s,\n" +
+                        "  Client Address State: %s,\n" +
+                        "  Client Id: %d,\n" +
+                        "  Client Birthday: %s,\n" +
+                        "  Client Gender: %s,\n" +
+                        "  Client Telephones Size: %s\n" +
+                        "}",
+                address.getCity(), address.getState().getName(), id, birthday, gender.getGender(), telephones.size()
+        );
+    }
 }

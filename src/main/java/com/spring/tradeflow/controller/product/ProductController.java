@@ -56,37 +56,51 @@ public class ProductController {
 
     @PutMapping("/{id}/discount")
     public ResponseEntity<Product> applyDiscount(@PathVariable Long id, @RequestParam Double discountPercentage) {
+        log.info("Applying discount {}", discountPercentage);
+        Product product = productService.getProduct(id);
+        log.info("Old price: {}", product.getPrice());
         Product updatedProduct = productService.applyDiscount(id, discountPercentage);
+        log.info("New price: {}", updatedProduct.getPrice());
         return ResponseEntity.ok(updatedProduct);
     }
 
     @GetMapping(path = "/low-stock")
     public ResponseEntity<List<Product>> findLowStockProducts() {
+        log.info("Finding low stock products");
         List<Product> products = productService.findLowStockProducts();
+        log.info("Low stock products returned {}", products);
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/price-range")
     public ResponseEntity<List<Product>> findByPriceRange(@RequestParam Double minPrice, @RequestParam Double maxPrice) {
+        log.info("Finding price range {}", minPrice + " - " + maxPrice);
         List<Product> products = productService.findProductsByPriceRange(minPrice, maxPrice);
+        log.info("Price range returned {}", products);
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<Product>> searchProducts(@RequestParam String keyword) {
+        log.info("Searching for {}", keyword);
         List<Product> products = productService.searchProductsByKeyword(keyword);
+        log.info("Search returned {}", products);
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/type/{type}")
     public ResponseEntity<List<Product>> findByType(@PathVariable ProductType type) {
+        log.info("Finding product type {}", type);
         List<Product> products = productService.findProductByType(type);
+        log.info("Product type returned {}", products);
         return ResponseEntity.ok(products);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        log.info("Deleting product {}", id);
         productService.deleteProduct(id);
+        log.info("Product deleted {}", id);
         return ResponseEntity.noContent().build();
     }
 

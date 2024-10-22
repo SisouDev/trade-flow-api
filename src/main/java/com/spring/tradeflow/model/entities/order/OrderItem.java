@@ -1,14 +1,17 @@
 package com.spring.tradeflow.model.entities.order;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.tradeflow.model.entities.product.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table
 @Getter
+@NoArgsConstructor
 public class OrderItem {
 
     @Id
@@ -29,9 +32,6 @@ public class OrderItem {
     @JsonBackReference
     private Order order;
 
-    public OrderItem() {
-    }
-
     public OrderItem(Product product, Integer quantity, Order order) {
         this.product = product;
         this.quantity = quantity;
@@ -45,7 +45,22 @@ public class OrderItem {
         }
     }
 
+    @JsonIgnore
     public Double getTotalPrice(){
         return product.getPrice() * (quantity != null ? quantity : 0);
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "OrderItem {\n" +
+                        "  Order Item Id: %d,\n" +
+                        "  Product Name: %s,\n" +
+                        "  Product Quantity: %d\n" +
+                        "}",
+                id,
+                product.getName(),
+                quantity
+        );
     }
 }

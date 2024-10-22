@@ -55,25 +55,25 @@ public class OrderService {
     }
 
     @Transactional
-    public Order addProducts(Long orderId, List<OrderItem> orderItems) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
-        List<Long> productIds = orderItems.stream().map(orderItem -> orderItem.getProduct().getId()).toList();
-        List<Product> products = (List<Product>) productRepository.findAllById(productIds);
-        if (products.size() != productIds.size()) {
-            throw new ResourceNotFoundException("Some products not found");
-        }
-        Map<Long, Product> productMap = products.stream().collect(Collectors.toMap(Product::getId, product -> product));
+    public Order addProducts(Long orderId, List<Map<String, Object>> items) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
-        for (OrderItem orderItem : orderItems) {
-            Product product = productMap.get(orderItem.getProduct().getId());
-            if (orderItem.getQuantity() <= 0) {
+        for (Map<String, Object> item : items) {
+            Long productId = ((Number) item.get("productId")).longValue();
+            Integer quantity = (Integer) item.get("quantity");
+
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+            if (quantity <= 0) {
                 throw new IllegalArgumentException("Quantity must be greater than zero");
             }
-            orderItem.setProduct(product);
-            orderItem.setOrder(order);
+
+            OrderItem orderItem = new OrderItem(product, quantity, order);
+            order.getOrderItems().add(orderItem);
         }
 
-        order.getOrderItems().addAll(orderItems);
         return orderRepository.save(order);
     }
 
@@ -101,11 +101,18 @@ public class OrderService {
     }
 
     @Transactional
-    public Order removeProduct(Long orderId, Long productId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-        order.getOrderItems().removeIf(orderItem -> orderItem.getProduct().getId().equals(productId));
-        return orderRepository.save(order);
+    public void removeProduct(Long orderId, Long itemId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        OrderItem orderItem = order.getOrderItems().stream()
+                .filter(item -> item.getId().equals(itemId))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Order item not found"));
+
+        order.getOrderItems().remove(orderItem);
+
+        orderRepository.save(order);
     }
 
     @Transactional
@@ -115,15 +122,19 @@ public class OrderService {
     }
 
     @Transactional
-    public Order changeQuantity(Long orderId, Long productId, Integer quantity) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+    public Order changeQuantity(Long orderId, Long orderItemId, Integer quantity) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
         OrderItem orderItem = order.getOrderItems().stream()
-                .filter(item -> item.getProduct().getId().equals(productId))
+                .filter(item -> item.getId().equals(orderItemId))
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found in order"));
+                .orElseThrow(() -> new ResourceNotFoundException("Order item not found"));
+
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than zero");
         }
+
         orderItem.setQuantity(quantity);
         return orderRepository.save(order);
     }

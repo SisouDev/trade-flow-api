@@ -62,4 +62,17 @@ public class Telephone {
         return Objects.hashCode(getTelephoneId());
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "Telephone {\n" +
+                        "  areaCode: '%s',\n" +
+                        "  telephoneId: %d,\n" +
+                        "  number: '%s',\n" +
+                        "  type: %s,\n" +
+                        "  client: %s\n" +
+                        "}",
+                areaCode, telephoneId, number, type, client.getFirstName()
+        );
+    }
 }
